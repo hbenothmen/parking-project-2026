@@ -1,0 +1,33 @@
+.presentation{
+    background: linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    url('/assets/images/parking.png');
+
+    background-size: cover;
+    background-position: center;
+    height: 85vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.pres h1{
+    font-size:55px;
+    font-weight:bold;
+}
+
+.pres p{
+    font-size:22px;
+}
+
+.card{
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+}
+
+footer{
+    font-size:18px;
+}

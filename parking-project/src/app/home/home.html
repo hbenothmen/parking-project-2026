@@ -1,0 +1,199 @@
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container">
+    <a href="/home" class="navbar-brand fw-bold link-light">
+       Quick Park
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home">Accueil</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/parkings">Parkings</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" 
+             href="#" 
+             id="navbarDropdown" 
+             role="button" 
+             data-bs-toggle="dropdown" 
+             aria-expanded="false">
+            Réservation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/aeroport"> Aéroports </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/centre-commercial"> Centres commerciaux </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/carres"> Garres </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact">Contact</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="btn btn-light ms-3" routerLink="/register">
+            S'inscrire
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-light ms-3" routerLink="/connexion">
+            Se connecter
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- Présentation -->
+<section class="presentation">
+  <div class="container text-center text-white">
+
+    <h1>Bienvenue sur Quick Parking</h1>
+
+    <p class="lead mt-3">
+      Réservez votre place de parking en quelques clics.
+      Consultez les places disponibles en temps réel et
+      effectuez votre paiement en toute sécurité.
+    </p>
+
+    
+
+  </div>
+</section>
+
+<!-- Services -->
+<section class="container py-5">
+
+  <h2 class="text-center mb-5">
+    Nos Services
+  </h2>
+
+  <div class="row">
+
+    <div class="col-md-4 mb-4">
+
+      <div class="card shadow h-100">
+
+        <div class="card-body text-center">
+
+
+          <h4>Réservation</h4>
+
+          <p>
+            Réservez votre place rapidement selon vos besoins.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+      <div class="card shadow h-100">
+
+        <div class="card-body text-center">
+
+       
+
+          <h4>Paiement sécurisé</h4>
+
+          <p>
+            Paiement en ligne par carte bancaire (Visa ou MasterCard), D17 ou Flouci.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+      <div class="card shadow h-100">
+
+        <div class="card-body text-center">
+
+          <h4>Disponibilité</h4>
+
+          <p>
+            Consultez les places disponibles avant votre arrivée.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!--Objectifs  -->
+<section class="bg-light py-5">
+
+  <div class="container">
+
+    <div class="row align-items-center">
+
+      <div class="col-md-6">
+
+        <h2>Pourquoi choisir Quick Parking ?</h2>
+
+        <ul class="mt-4">
+
+          <li>👉 Réservation simple</li>
+
+          <li>👉 Gain de temps</li>
+
+          <li>👉 Disponibilité en temps réel</li>
+
+          <li>👉 Paiement sécurisé</li>
+
+          <li>👉 Historique des réservations</li>
+
+        </ul>
+
+      </div>
+
+      <div class="col-md-6 text-center">
+
+        <img
+        src="assets/images/parking.png"
+        class="img-fluid rounded">
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- Footer -->
+
+<footer class="bg-dark text-white text-center p-4">
+
+    © 2026 Quick Parking - Tous droits réservés
+
+</footer>

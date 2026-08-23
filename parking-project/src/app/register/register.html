@@ -1,0 +1,162 @@
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container">
+    <a href="/home" class="navbar-brand fw-bold link-light">
+       Quick Park
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home">Accueil</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/parkings">Parkings</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" 
+             href="#" 
+             id="navbarDropdown" 
+             role="button" 
+             data-bs-toggle="dropdown" 
+             aria-expanded="false">
+            Réservation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/aeroport"> Aéroports </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/centre-commercial"> Centres commerciaux </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/carres"> Garres </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-sm p-4 w-100" style="max-width: 450px; border-radius: 12px;">
+
+    <div class="text-center mb-4">
+      <h2 class="fw-bold text-success">Créer un compte</h2>
+      <br>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+      <!-- Nom -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Nom et Prénom</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nom"
+          [class.is-invalid]="registerForm.get('nom')?.touched && registerForm.get('nom')?.invalid"
+          >
+
+        @if(registerForm.get('nom')?.touched && registerForm.get('nom')?.invalid){
+          <div class="invalid-feedback d-block">
+           <small> Le nom est obligatoire</small>
+          </div>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Adresse Email</label>
+
+        <input
+          type="email"
+          class="form-control"
+          formControlName="email"
+          [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+
+        @if(registerForm.get('email')?.touched && registerForm.get('email')?.invalid){
+
+          <div class="invalid-feedback d-block">
+
+            @if(registerForm.get('email')?.errors?.['required']){
+              <small>Email obligatoire</small>
+            }
+
+            @if(registerForm.get('email')?.errors?.['email']){
+              <small>Email invalid</small>
+            }
+
+          </div>
+
+        }
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Mot de passe</label>
+
+        <input
+          [type]="hidePassword ? 'password':'text'"
+          class="form-control"
+          formControlName="password"
+          [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+
+        @if(registerForm.get('password')?.touched && registerForm.get('password')?.invalid){
+
+          <div class="invalid-feedback d-block">
+
+            @if(registerForm.get('password')?.errors?.['required']){
+              <small>Mot de passe obligatoire</small>
+            }
+
+            @if(registerForm.get('password')?.errors?.['pattern']){
+              <small>Minimum 8 caractères,une majuscule, une minuscule,
+                 un chiffre et un caractère spécial</small>
+            }
+
+          </div>
+
+        }
+      </div>
+
+      <!-- Confirmation de mot de passe-->
+      <div class="mb-4">
+        <label class="form-label fw-semibold small">Confirmer le mot de passe</label>
+
+        <input
+          [type]="hidePassword ? 'password':'text'"
+          class="form-control"
+          formControlName="confirmPassword">
+
+        @if(registerForm.errors?.['passwordMismatch'] &&
+            registerForm.get('confirmPassword')?.touched){
+
+          <div class="text-danger">
+            <small>Les mots de passe ne correspondent pas</small>
+          </div>
+
+        }
+      </div>
+
+      <button
+        class="btn btn-success w-100"
+        [disabled]="registerForm.invalid">
+        Créer un compte
+      </button>
+
+    </form>
+
+  </div>
+</div>
