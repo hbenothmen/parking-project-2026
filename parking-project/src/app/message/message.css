@@ -1,0 +1,38 @@
+.container {
+  max-width: 1200px;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.message-text {
+  max-width: 350px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.btn-danger {
+  border-radius: 6px;
+}
+
+.navbar {
+  min-height: 65px;
+}
+
+h2 {
+  margin-bottom: 5px;
+}

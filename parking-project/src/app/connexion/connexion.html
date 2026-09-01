@@ -1,57 +1,128 @@
 
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
   <div class="container">
-     <a href= "/home" class="navbar-brand fw-bold link-light " >
-    
+    <a href="/home" class="navbar-brand fw-bold link-light">
        Quick Park
-    </a></div></nav>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home">Accueil</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/parkings">Parkings</a>
+        </li>
+
+        <li class="nav-item dropdown">
+           @if (userService.currentUser()){
+          <a class="nav-link dropdown-toggle" 
+             href="#" 
+             id="navbarDropdown" 
+             role="button" 
+             data-bs-toggle="dropdown" 
+             aria-expanded="false"> <i class="bi bi-calendar-check"></i>
+            Réservation
+          </a> }
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+           
+            <li>
+              
+              <a class="dropdown-item" routerLink="/reservation/aeroport"> Aéroports </a>
+               </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/centre-commercial"> Centres commerciaux </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/carres"> Garres </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact">Contact</a>
+        </li>
+
+        
+      </ul>
+    </div>
+  </div>
+</nav>
 
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
+  <div class="card shadow-sm p-4 w-100" 
+   style="max-width: 400px; border-radius: 12px;">
     
     <div class="text-center mb-4">
       <h2 class="fw-bold text-success">Connexion</h2>
-      <!-- <p class="text-muted small">Accédez à votre espace personnel</p> -->
+      
     </div>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 <div class="mb-3">
-    <label for="email" class="form-label fw-semibold small">Adresse Email</label>
-    <input type="email" id="email" formControlName="email" 
-    class="form-control"
-    [class.is-invalid]="email?.touched && email?.invalid"
-    placeholder="nom@exemple.com">
-     @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched)
+    <label for="email" class="form-label fw-semibold small">
+      Adresse Email
+    </label>
+    <input 
+      type="email" 
+      id="email"
+      formControlName="email" 
+      class="form-control"
+      [class.is-invalid]="email?.touched && email?.invalid"
+      placeholder="nom@exemple.com"
+    >
+     @if(loginForm.get('email')?.invalid &&
+      loginForm.get('email')?.touched)
      {
-     <div class="invalid-feedback">
+      <div class="invalid-feedback d-block">
+
       @if (loginForm.get('email')?.errors?.['required'])
-      {<small>L'email est obligatoire</small>}
+      {
+        <small>
+          L'email est obligatoire
+        </small>
+      }
       @if(loginForm.get('email')?.errors?.['email'])
-      {<small>Email invalid</small>}
+      {
+         <small>
+          Email invalide
+        </small>
+      }
 
 </div>
 }
 </div>
 <div class="mb-4">
-    <label for="password" class="form-label fw-semibold small">Mot de passe:</label>
+    <label
+     for="password" 
+     class="form-label fw-semibold small">
+     Mot de passe
+    </label>
+
     <div class="position-relative">
+
     <input
     [type]="hidePassword ? 'password' : 'text'"
     id="password"
     formControlName="password"
     class="form-control"
-    [class.is-invalid]="password?.touched && password?.invalid"
+    [class.is-invalid]="password?.touched &&
+     password?.invalid"
     placeholder="••••••••">
 
-<!-- <button type="button" class="btn btn-outline-secondary" (click)="hidePassword = !hidePassword" 
- >
- {{ hidePassword ? 'Afficher' : 'Masquer' }}
-      </button> -->
    <button 
-  type="button" 
-  class="btn position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent text-secondary me-2" 
-  (click)="hidePassword = !hidePassword"
-  [attr.aria-label]="hidePassword ? 'Afficher le mot de passe' : 'Masquer le mot de passe'"
-  style="z-index: 5;"
+     type="button" 
+     class="btn position-absolute top-50 end-0
+            translate-middle-y border-0
+            bg-transparent text-secondary me-2" 
+     (click)="hidePassword = !hidePassword"
+     [attr.aria-label]="hidePassword ? 'Afficher le mot de passe' : 'Masquer le mot de passe'"
+     style="z-index: 5;"
   >
  
   <!-- Icône dynamique Bootstrap Icons -->
@@ -65,12 +136,18 @@
  </div>
      @if (loginForm.get('password')?.touched && password?.invalid) {
       <div class="invalid-feedback d-block">
-        @if (loginForm.get('password')?.errors?.['required']) {
-          <small>Le mot de passe est obligatoire</small>
-        }
-        @if (loginForm.get('password')?.errors?.['minlength']) {
-          <small>Le mot de passe doit contenir au moins 8 caractères</small>
-        }
+        @if (loginForm.get('password')?.errors?.['required'])
+         {
+          <small>
+            Le mot de passe est obligatoire
+          </small>
+         }
+        @if (loginForm.get('password')?.errors?.['minlength'])
+         {
+          <small> 
+            Le mot de passe doit contenir au moins 8 caractères
+          </small>
+         }
       </div>  
     }
     </div>
@@ -83,5 +160,6 @@
       </button>
 
 </form> 
-</div></div>
-<router-outlet></router-outlet>
+</div>
+</div>
+

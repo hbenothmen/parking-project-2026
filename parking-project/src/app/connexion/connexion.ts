@@ -1,17 +1,19 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component,inject } from '@angular/core';
 import { FormBuilder,FormGroup,Validators,ReactiveFormsModule,AbstractControl,ValidationErrors } from '@angular/forms';
-
+import { UserService } from '../services/user.service';
+import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-connexion',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterOutlet],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './connexion.html',
   styleUrl: './connexion.css',
 })
 export class Connexion {
  hidePassword = true;
  loginForm:FormGroup;
+ userService = inject(UserService);
+ private router=inject(Router);
  constructor(private fb:FormBuilder){
   this.loginForm=this.fb.group({
     password: ['',[Validators.required, Validators.minLength(8)]],
@@ -21,10 +23,37 @@ get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
  
  
- onSubmit() {
-  if (this.loginForm.valid) {
-    console.log('Données envoyées ', this.loginForm.value);
+ async onSubmit() {
+  if (this.loginForm.invalid) { 
+    this.loginForm.markAllAsTouched();
+    return; 
+  }
+
+  const email=this.loginForm.value.email;
+  const password=this.loginForm.value.password;
+
+  console.log('Données envoyées ', {
+    email:email,
+    password:password
+  }); 
+   const user=await this.userService.login(email,password);
+ 
+ if(user){
+  console.log("connexion réussie:", user);
+
+  if (user.role==='admin'){
+    this.router.navigate(['/administration']);
+  }
+  else{
+  this.router.navigate(['/home']);
   }
  }
+
+ else{
+  alert("email ou mot de passe incorrect");
+ }
+ this.loginForm.reset()
+  }
+  
 }
 

@@ -13,26 +13,28 @@
     <div class="collapse navbar-collapse" id="menu">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/home">Accueil</a>
+          <a class="nav-link" routerLink="/home"><i class="bi bi-house"></i>Accueil</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/parkings">Parkings</a>
         </li>
 
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown"> @if (userService.currentUser()){
           <a class="nav-link dropdown-toggle" 
              href="#" 
              id="navbarDropdown" 
              role="button" 
              data-bs-toggle="dropdown" 
-             aria-expanded="false">
+             aria-expanded="false"> <i class="bi bi-calendar-check"></i>
             Réservation
-          </a>
+          </a> }
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+           
             <li>
+              
               <a class="dropdown-item" routerLink="/reservation/aeroport"> Aéroports </a>
-            </li>
+               </li>
             <li>
               <a class="dropdown-item" routerLink="/reservation/centre-commercial"> Centres commerciaux </a>
             </li>

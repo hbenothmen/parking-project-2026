@@ -67,7 +67,8 @@ export class Register implements OnInit{
     const user: User={
      nom: this.registerForm.value.nom,
      email: this.registerForm.value.email,
-     password: this.registerForm.value.password 
+     password: this.registerForm.value.password,
+     role:'user'
     };
     console.log("utilisateur à ajouté:",user);
     //Envoie une requête HTTP (généralement POST)
