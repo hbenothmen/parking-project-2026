@@ -3,21 +3,30 @@ from flask_cors import CORS
 import mysql.connector
 from mysql.connector import Error
 from werkzeug.security import  generate_password_hash,check_password_hash
+import os
 app=Flask(__name__)
 CORS(app)
 #connexion a MySQL
 def get_db_connection():
     try:
-        connection=mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='',
-            database='parkingdb'
-        )
-        return connection
+      #   connection=mysql.connector.connect(
+      #       host='localhost',
+      #       user='root',
+      #       password='',
+      #       database='parkingdb'
+      #   )
+          connection=mysql.connector.connect(
+            host=os.getenv('DB_HOST'),
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            database=os.getenv('DB-NAME'),
+            port=os.getenv('DB_PORT',3306))
+          
+    
+          return connection
     except Error as e:
-        print(f"Error connecting to MySQL: {e}")
-        return None
+      print(f"Error connecting to MySQL: {e}")
+      return None
     
 #recuperer les utilisateurs
 @app.route('/api/users',methods=['GET'])
@@ -169,7 +178,7 @@ def envoyer_message():
       conn.close()
       return jsonify({
          "message":"Message envoyé à l'administrateur "
-      });201
+      }),201
    except Exception as e:
       print("Erreur:", e)
       return jsonify({
@@ -234,4 +243,4 @@ def supprimer_message(id):
      }),500
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5000)
+    app.run(host='0.0.0.0',debug=True,port=5000)
