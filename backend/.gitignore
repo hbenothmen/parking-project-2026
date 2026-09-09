@@ -1,0 +1,4 @@
+.env
+parkingdb.sql
+*.pyc
+__pycache__/

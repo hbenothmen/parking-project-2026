@@ -4,6 +4,12 @@ import mysql.connector
 from mysql.connector import Error
 from werkzeug.security import  generate_password_hash,check_password_hash
 import os
+from dotenv import load_dotenv
+load_dotenv()
+print("HOST =", os.getenv("DB_HOST"))
+print("PORT =", os.getenv("DB_PORT"))
+print("USER =", os.getenv("DB_USER"))
+print("DATABASE =", os.getenv("DB_NAME"))
 app=Flask(__name__)
 CORS(app)
 #connexion a MySQL
@@ -15,19 +21,24 @@ def get_db_connection():
       #       password='',
       #       database='parkingdb'
       #   )
-          connection=mysql.connector.connect(
+          connection = mysql.connector.connect(
             host=os.getenv('DB_HOST'),
             user=os.getenv('DB_USER'),
             password=os.getenv('DB_PASSWORD'),
-            database=os.getenv('DB-NAME'),
-            port=os.getenv('DB_PORT',3306))
-          
-    
+            database=os.getenv('DB_NAME'),
+            port=int(os.getenv('DB_PORT', 3306))
+          )
           return connection
     except Error as e:
       print(f"Error connecting to MySQL: {e}")
       return None
-    
+connection = get_db_connection()
+
+if connection:
+    print("✅ Connexion à Aiven réussie !")
+    connection.close()
+else:
+    print("❌ Connexion à Aiven échouée !")    
 #recuperer les utilisateurs
 @app.route('/api/users',methods=['GET'])
 def get_users():
@@ -241,6 +252,12 @@ def supprimer_message(id):
      return jsonify({
         "message":"erreur lors de la suppression"
      }),500
+
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "Backend Flask fonctionne !"
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True,port=5000)
