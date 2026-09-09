@@ -258,6 +258,155 @@ def home():
     return jsonify({
         "message": "Backend Flask fonctionne !"
     })
+@app.route("/api/parkings", methods=['GET'])
+def get_parkings():
+   connection=get_db_connection()
+   if connection is None:
+    return jsonify ({
+       "erreur":"Erreur de connexion à la base de données"
+    }),500
+   cursor=connection.cursor(dictionary=True)
 
+   try:
+    cursor.execute("""SELECT id,nom, adresse, nombre_places,
+                   places_disponibles, prix_heure, statut, date_creation
+            FROM parking
+            ORDER BY id DESC
+        """)
+    parkings=cursor.fetchall()
+    return jsonify(parkings),200
+   except Error as e:
+    print("Erreur d'afficher les parkings:",e)
+    return jsonify({"error": str(e)}),500
+   finally:
+    cursor.close()
+    connection.close()
+@app.route("/api/parkings", methods=['POST'])
+def add_parking():
+   data=request.get_json()
+   nom=data.get("nom")
+   adresse=data.get("adresse")
+   nombre_places=data.get("nombre_places")
+   prix_heure=data.get("prix_heure")
+   if not nom or not adresse or nombre_places is None or prix_heure is None:  
+    return jsonify({"error":"Tous les champs sont obligatoires"}),400
+
+   connection=get_db_connection()
+   cursor=cursor.connection()
+   if connection is None:
+      return jsonify({"Error":"Erreur au moment de connexion"}),500
+   cursor=connection.cursor(dictionary=True)  
+   try:
+      cursor.execute("""INSERT INTO parking (nom,
+        adresse, nombre_places,
+      places_disponibles, prix_heure,
+      statut, date_creation) VALUES (%s,%s,%s,%s,%s,%s,%s)""",(nom,
+      adresse, nombre_places,places_disponibles, prix_heure, "disponible"))
+      connection.commit()
+      parking_id=cursor.lastrowid
+      cursor.execute("""SELECT id,nom, adresse, nombre_places,
+                   places_disponibles, prix_heure, statut, date_creation
+            FROM parking where id=%s""",(parking_id,))
+      parking=cursor.fetchone()
+      return jsonify(parking),200
+   except Error as e:
+    connection.rollback() 
+    print("Erreur de sauvegarde du parking:",e)
+    return jsonify({"error":str(e)}),500
+   finally:
+      cursor.close()
+      connection.close()
+@app.route("/api/parkings/<int:id>",methods=["PUT"])
+def modifier_parking(id):
+   data=request.get_json()
+   nom=data.get("nom")
+   adresse=data.get("adresse")
+   nombre_places=data.get("nombre_places")
+   places_disponibles = data.get("places_disponibles")
+   prix_heure=data.get("prix_heure") 
+   statut = data.get("statut")
+   connection=get_db_connection() 
+   if connection is None:
+      return jsonify({
+         "error":"Erreur de connexion à la base de données "
+      }),500
+   cursor=connection.cursor(dictionary=True) 
+   try:
+      cursor.execute("""UPDATE parking
+        SET
+          nom=%s,
+          adresse = %s,
+          nombre_places = %s,
+          places_disponibles = %s,
+          prix_heure = %s,
+          statut = %s
+      WHERE id = %s""",( nom,
+            adresse,
+            nombre_places,
+            places_disponibles,
+            prix_heure,
+            statut,
+            id))
+      connection.commit() 
+
+      if cursor.rowcount == 0:
+            return jsonify({
+                "error": "Parking introuvable"
+            }), 404
+
+      cursor.execute("""
+            SELECT id, nom, adresse, nombre_places,
+                   places_disponibles, prix_heure, statut, date_creation
+            FROM parking
+            WHERE id = %s
+        """, (id,))
+
+      parking = cursor.fetchone()
+
+      return jsonify(parking), 200
+   except Error as e:
+        connection.rollback()
+        print("Erreur PUT parking :", e)
+        return jsonify({"error": str(e)}), 500
+
+   finally:
+        cursor.close()
+        connection.close()
+@app.route("/api/parkings/<int:id>", methods=["DELETE"])
+def supprimer_parking(id):
+    connection = get_db_connection()
+
+    if connection is None:
+        return jsonify({
+            "error": "Erreur de connexion à la base de données"
+        }), 500
+
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute(
+            "DELETE FROM parking WHERE id = %s",
+            (id,)
+        )
+
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({
+                "error": "Parking introuvable"
+            }), 404
+
+        return jsonify({
+            "message": "Parking supprimé avec succès"
+        }), 200
+
+    except Error as e:
+        connection.rollback()
+        print("Erreur DELETE parking :", e)
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        connection.close()
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True,port=5000)
