@@ -11,7 +11,9 @@ print("PORT =", os.getenv("DB_PORT"))
 print("USER =", os.getenv("DB_USER"))
 print("DATABASE =", os.getenv("DB_NAME"))
 app=Flask(__name__)
+app.json.ensure_ascii = False
 CORS(app)
+
 #connexion a MySQL
 def get_db_connection():
     try:
@@ -283,39 +285,78 @@ def get_parkings():
     connection.close()
 @app.route("/api/parkings", methods=['POST'])
 def add_parking():
-   data=request.get_json()
-   nom=data.get("nom")
-   adresse=data.get("adresse")
-   nombre_places=data.get("nombre_places")
-   prix_heure=data.get("prix_heure")
-   if not nom or not adresse or nombre_places is None or prix_heure is None:  
-    return jsonify({"error":"Tous les champs sont obligatoires"}),400
 
-   connection=get_db_connection()
-   cursor=cursor.connection()
-   if connection is None:
-      return jsonify({"Error":"Erreur au moment de connexion"}),500
-   cursor=connection.cursor(dictionary=True)  
-   try:
-      cursor.execute("""INSERT INTO parking (nom,
-        adresse, nombre_places,
-      places_disponibles, prix_heure,
-      statut, date_creation) VALUES (%s,%s,%s,%s,%s,%s,%s)""",(nom,
-      adresse, nombre_places,places_disponibles, prix_heure, "disponible"))
-      connection.commit()
-      parking_id=cursor.lastrowid
-      cursor.execute("""SELECT id,nom, adresse, nombre_places,
-                   places_disponibles, prix_heure, statut, date_creation
-            FROM parking where id=%s""",(parking_id,))
-      parking=cursor.fetchone()
-      return jsonify(parking),200
-   except Error as e:
-    connection.rollback() 
-    print("Erreur de sauvegarde du parking:",e)
-    return jsonify({"error":str(e)}),500
-   finally:
-      cursor.close()
-      connection.close()
+    data = request.get_json()
+
+    nom = data.get("nom")
+    adresse = data.get("adresse")
+    nombre_places = data.get("nombre_places")
+    prix_heure = data.get("prix_heure")
+
+    if not nom or not adresse or nombre_places is None or prix_heure is None:
+        return jsonify({
+            "error": "Tous les champs sont obligatoires"
+        }), 400
+
+    connection = get_db_connection()
+
+    if connection is None:
+        return jsonify({
+            "error": "Erreur au moment de la connexion"
+        }), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    # Au départ, toutes les places sont disponibles
+    places_disponibles = nombre_places
+
+    try:
+
+        cursor.execute("""
+            INSERT INTO parking
+            (nom, adresse, nombre_places, places_disponibles, prix_heure, statut)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            nom,
+            adresse,
+            nombre_places,
+            places_disponibles,
+            prix_heure,
+            "disponible"
+        ))
+
+        connection.commit()
+
+        parking_id = cursor.lastrowid
+
+        cursor.execute("""
+            SELECT id, nom, adresse, nombre_places,
+                   places_disponibles, prix_heure,
+                   statut, date_creation
+            FROM parking
+            WHERE id = %s
+        """, (parking_id,))
+
+        parking = cursor.fetchone()
+
+        return jsonify(parking), 201
+
+    except Error as e:
+
+        connection.rollback()
+
+        print("Erreur de sauvegarde du parking :", e)
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+    finally:
+
+        cursor.close()
+        connection.close()
+
+
 @app.route("/api/parkings/<int:id>",methods=["PUT"])
 def modifier_parking(id):
    data=request.get_json()
