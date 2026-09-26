@@ -7,9 +7,12 @@ import { User } from "../models/user.model";
 })
 export class UserService{
     private http=inject(HttpClient);
-     apiUrl="http://127.0.0.1:5000/api/users";
-     loginUrl="http://127.0.0.1:5000/api/login";
-     messageUrl="http://localhost:5000/api/messages"
+    //  apiUrl="http://127.0.0.1:5000/api/users";
+    //  loginUrl="http://127.0.0.1:5000/api/login";
+    //  messageUrl="http://localhost:5000/api/messages"
+   private  apiUrl="https://parking-backend-3ao9.onrender.com/api/users"
+    private loginUrl="https://parking-backend-3ao9.onrender.com/api/login"
+   private  messageUrl="https://parking-backend-3ao9.onrender.com/api/messages"
     // flask api enpoint
 //Manage tasks state using Angular Signals for fast updates without Zone.js
 users=signal<User[]>([]);

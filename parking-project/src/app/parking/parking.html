@@ -1,0 +1,117 @@
+<!-- <p>parking works!</p>
+<div class="container mt-4">
+
+  <h2 class="text-success mb-4">
+    Gestion des parkings
+  </h2>
+
+  @if (chargement) {
+
+    <div class="text-center">
+      <div class="spinner-border text-success" role="status"></div>
+      <p class="mt-2">Chargement des parkings...</p>
+    </div>
+
+  }
+
+  @if (erreur) {
+
+    <div class="alert alert-danger">
+      {{ erreur }}
+    </div>
+
+  }
+
+  @if (!chargement && !erreur) {
+
+    @if (parkings.length === 0) {
+
+      <div class="alert alert-info">
+        Aucun parking disponible.
+      </div>
+
+    } @else {
+
+      <div class="row">
+
+        @for (parking of parkings; track parking.id) {
+
+          <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+              <div class="card-body">
+
+                <h5 class="card-title text-success">
+                  {{ parking.nom }}
+                </h5>
+
+                <p class="card-text">
+                  <strong>Adresse :</strong>
+                  {{ parking.adresse }}
+                </p>
+
+                <p class="card-text">
+                  <strong>Nombre de places :</strong>
+                  {{ parking.nombre_places }}
+                </p>
+
+                <p class="card-text">
+                  <strong>Places disponibles :</strong>
+                  {{ parking.places_disponibles }}
+                </p>
+
+                <p class="card-text">
+                  <strong>Prix par heure :</strong>
+                  {{ parking.prix_heure }} DT
+                </p>
+
+                <p class="card-text">
+                  <strong>Statut :</strong>
+                  {{ parking.statut }}
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  }
+
+</div> -->
+<div class="container mt-4">
+
+  <h2 class="text-success">
+    Liste des parkings
+  </h2>
+
+  <p>Nombre de parkings : {{ parkings.length }}</p>
+
+  @for (parking of parkings; track parking.id) {
+
+    <div class="card mb-3 p-3">
+
+      <h4>{{ parking.nom }}</h4>
+
+      <p><strong>Adresse</strong> : {{ parking.adresse }}</p>
+
+      <p><strong>Nombre de places</strong> : {{ parking.nombre_places }}</p>
+
+      <p><strong>Places disponibles</strong> : {{ parking.places_disponibles }}</p>
+
+      <p><strong>Prix </strong>: {{ parking.prix_heure }} DT / heure</p>
+
+      <p><strong>Statut </strong>: {{ parking.statut }}</p>
+
+    </div>
+
+  }
+
+</div>

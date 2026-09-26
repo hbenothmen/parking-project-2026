@@ -1,4 +1,4 @@
-import { Component, OnInit,inject } from '@angular/core';
+import { Component, OnInit,inject, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 })
 export class Message implements OnInit {
   userService= inject(UserService);
+  cdr = inject(ChangeDetectorRef);
   messages: any[]=[];
   chargement = true;
   erreur='';
@@ -34,6 +35,15 @@ export class Message implements OnInit {
 
     this.messages = data;
 
+ // On indique immédiatement que le chargement est terminé
+    this.chargement = false;
+    
+// Force Angular à mettre à jour l'affichage
+      this.cdr.detectChanges();
+
+      console.log('Affichage mis à jour');
+
+
   } catch (error) {
 
     console.error(
@@ -43,11 +53,14 @@ export class Message implements OnInit {
 
     this.erreur = 'Impossible de charger les messages';
 
-  } finally {
+   }
+  //  finally {
 
-    this.chargement = false;
+  //   this.chargement = false;
+  //     console.log('FIN chargement =', this.chargement);
+  //  console.log('Nombre de messages =', this.messages.length);
 
-  }
+  //  }
 }
   // chargerMessages():void {
   //   console.log('Chargement des messages...');

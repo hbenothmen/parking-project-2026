@@ -1,0 +1,38 @@
+
+<div class="container mt-4">
+
+  <h2 class="text-success">
+    Gestion des parkings
+  </h2>
+<div class="d-flex justify-content-between align-items-center">
+  <p>Nombre de parkings : {{ parkings.length }}</p>
+  <button type="button" class="btn btn-outline-success" >Ajouter un parking</button></div>
+<br><br>
+  @for (parking of parkings; track parking.id) {
+
+    <div class="card mb-3 p-3">
+
+      <h4>{{ parking.nom }}</h4>
+
+      <p><strong>Adresse</strong> : {{ parking.adresse }}</p>
+
+      <p><strong>Nombre de places</strong> : {{ parking.nombre_places }}</p>
+
+      <p><strong>Places disponibles</strong> : {{ parking.places_disponibles }}</p>
+
+      <p><strong>Prix </strong>: {{ parking.prix_heure }} DT / heure</p>
+
+      <p><strong>Statut </strong>: {{ parking.statut }}</p>
+      <div class="btn-group gap-2" role="group" >
+      <div>
+      <button type="button" class="btn btn-outline-primary">Modifier</button>
+      </div>
+      <div>
+      <button type="button" class="btn btn-outline-danger">Supprimer</button>
+    </div>
+    </div>
+    </div>
+
+  }
+
+</div>

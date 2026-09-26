@@ -1,0 +1,169 @@
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container">
+    <a href="/home" class="navbar-brand fw-bold link-light">
+       Quick Park
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home">Accueil</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/parkings">Parkings</a>
+        </li>
+
+        <li class="nav-item dropdown"> @if (userService.currentUser()){
+          <a class="nav-link dropdown-toggle" 
+             href="#" 
+             id="navbarDropdown" 
+             role="button" 
+             data-bs-toggle="dropdown" 
+             aria-expanded="false"> <i class="bi bi-calendar-check"></i>
+            Réservation
+          </a> }
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+           
+            <li>
+              
+              <a class="dropdown-item" routerLink="/reservation/aeroport"> Aéroports </a>
+               </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/centre-commercial"> Centres commerciaux </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/reservation/carres"> Garres </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact">Contact</a>
+        </li>
+
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-sm p-4 w-100" style="max-width: 450px; border-radius: 12px;">
+
+    <div class="text-center mb-4">
+      <h2 class="fw-bold text-success">Ajouter un parking</h2>
+      <br>
+    </div>
+
+    <form [formGroup]="parkingForm" (ngSubmit)="onSubmit()">
+
+      <!-- Nom -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Nom du parking</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nom"
+          [class.is-invalid]="parkingForm.get('nom')?.touched && parkingForm.get('nom')?.invalid"
+          >
+
+        @if(parkingForm.get('nom')?.touched && parkingForm.get('nom')?.invalid){
+          <div class="invalid-feedback d-block">
+           <small> Le nom est obligatoire</small>
+          </div>
+        }
+      </div>
+
+      <!-- adresse -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Adresse</label>
+
+        <input
+          type="texte"
+          class="form-control"
+          formControlName="adresse"
+          [class.is-invalid]="parkingForm.get('adresse')?.touched && parkingForm.get('adresse')?.invalid">
+
+        @if(parkingForm.get('adresse')?.touched && parkingForm.get('adresse')?.invalid){
+
+          <div class="invalid-feedback d-block">
+              <small>L'adresse est obligatoire</small>
+            
+          </div>
+
+        }
+      </div>
+
+      <!-- Nombre de places -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Nombre de places_</label>
+           <input
+          type="number"
+          class="form-control"
+          formControlName="nombre_places"
+          [class.is-invalid]="parkingForm.get('nombre_places')?.touched && parkingForm.get('nombre_places')?.invalid">
+
+        @if(parkingForm.get('nombre_places')?.touched && parkingForm.get('nombre_places')?.invalid){
+
+          <div class="invalid-feedback d-block">
+              <small>Le nombre de places est obligatoire</small>
+            
+          </div>
+
+        }
+      </div>
+
+     
+      <!-- Prix -->
+      <div class="mb-3">
+
+        <label class="form-label fw-semibold">
+          Prix par heure (DT)
+        </label>
+
+        <input
+          type="number"
+          step="0.1"
+          class="form-control"
+          formControlName="prix_heure"
+          [class.is-invalid]="
+            parkingForm.get('prix_heure')?.touched &&
+            parkingForm.get('prix_heure')?.invalid
+          "
+        >
+
+        @if (
+          parkingForm.get('prix_heure')?.touched &&
+          parkingForm.get('prix_heure')?.invalid
+        ) {
+
+          <div class="invalid-feedback d-block">
+            Le prix par heure est obligatoire.
+          </div>
+
+        }
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn btn-success w-100"
+        [disabled]="parkingForm.invalid">
+
+        Ajouter le parking
+
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
