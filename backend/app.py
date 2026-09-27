@@ -126,17 +126,28 @@ def add_user():
 def supprimer_user(id):
    try:
       conn=get_db_connection()
+      if conn is None:
+         return jsonify({
+            "error":"Erreur lors de la connection a la base de données"
+         }),500
       cursor=conn.cursor()
       sqlquery="""DELETE FROM utilisateur where id=%s"""
       cursor.execute(sqlquery,(id,))
+      if cursor.rowcount==0:
+         cursor.close()
+         conn.close()
+         return jsonify({
+            "error":"Utilisateur introuvable"
+         }),400
       conn.commit()
+      cursor.close()
       conn.close()
       return jsonify({
          "utilisateur supprimé avec succés "
       }),200
    except Exception as e:
      print ("ERREUR:",e)
-     jsonify({
+     return jsonify({
         "Erreur lors de la suppression de l'utilisateur"
      }),500
     
