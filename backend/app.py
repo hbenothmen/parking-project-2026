@@ -40,8 +40,9 @@ if connection:
     print("✅ Connexion à Aiven réussie !")
     connection.close()
 else:
-    print("❌ Connexion à Aiven échouée !")    
-#recuperer les utilisateurs
+    print("❌ Connexion à Aiven échouée !") 
+
+##### Récuprer les utilisateurs ######
 @app.route('/api/users',methods=['GET'])
 def get_users():
    conn=get_db_connection()
@@ -50,13 +51,14 @@ def get_users():
          "error":"Impossible de se connexter  à la base de données"
         }), 500
    cursor=conn.cursor(dictionary=True)
-   cursor.execute("SELECT id,nom, email FROM utilisateur ORDER BY id DESC")
+   cursor.execute("SELECT id,nom, email FROM utilisateur ")
    users=cursor.fetchall()
    cursor.close()
    conn.close()
    return jsonify(users), 200
 
-#ajout d'un utiliateur
+###### Ajout d'un utiliateur ########
+
 @app.route('/api/users', methods=['POST'])
 def add_user():
  data=request.get_json()
@@ -117,8 +119,30 @@ def add_user():
     print(f"Erreur MySQL : {e}")   
     return jsonify({
        "error":"Erreur lors de l'ajout de l'utilisateur"
-    }),500 
-#login
+    }),500
+
+ ####Supprimer utilisateur ######
+@app.route('/api/users/<int:id>', methods=['DELETE']) 
+def supprimer_user(id):
+   try:
+      conn=get_db_connection()
+      cursor=conn.cursor()
+      sqlquery="""DELETE FROM utilisateur where id=%s"""
+      cursor.execute(sqlquery,(id,))
+      conn.commit()
+      conn.close()
+      return jsonify({
+         "utilisateur supprimé avec succés "
+      }),200
+   except Exception as e:
+     print ("ERREUR:",e)
+     jsonify({
+        "Erreur lors de la suppression de l'utilisateur"
+     }),500
+    
+   
+
+###### login #######
 @app.route('/api/login', methods=['POST'])
 def login():
     data=request.get_json() 
