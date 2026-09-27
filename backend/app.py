@@ -50,7 +50,7 @@ def get_users():
          "error":"Impossible de se connexter  à la base de données"
         }), 500
    cursor=conn.cursor(dictionary=True)
-   cursor.execute("SELECT nom, email FROM utilisateur")
+   cursor.execute("SELECT id,nom, email FROM utilisateur ORDER BY id DESC")
    users=cursor.fetchall()
    cursor.close()
    conn.close()
@@ -458,7 +458,7 @@ def modifier_parking(id):
 
         cursor.close()
         connection.close()
-        
+
 @app.route("/api/parkings/<int:id>", methods=["DELETE"])
 def supprimer_parking(id):
     connection = get_db_connection()
