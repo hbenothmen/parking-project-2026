@@ -530,5 +530,119 @@ def supprimer_parking(id):
     finally:
         cursor.close()
         connection.close()
+##### Reservation ######
+@app.route('/api/reservations', methods=['POST'])
+def ajouter_reservation():
+    try:
+        data = request.get_json()
+
+        utilisateur_id = data.get('utilisateur_id')
+        parking_id = data.get('parking_id')
+        date_reservation = data.get('date_reservation')
+        heure_arrivee = data.get('heure_arrivee')
+        duree = data.get('duree')
+
+        # Vérification des données
+        if not all([
+            utilisateur_id,
+            parking_id,
+            date_reservation,
+            heure_arrivee,
+            duree
+        ]):
+            return jsonify({
+                "error": "Toutes les informations sont obligatoires"
+            }), 400
+
+        conn = get_db_connection()
+
+        if conn is None:
+            return jsonify({
+                "error": "Erreur de connexion à la base de données"
+            }), 500
+
+        cursor = conn.cursor(dictionary=True)
+
+        # Vérifier le parking et récupérer ses informations
+        cursor.execute("""
+            SELECT id, places_disponibles, prix_heure
+            FROM parking
+            WHERE id = %s
+        """, (parking_id,))
+
+        parking = cursor.fetchone()
+
+        if parking is None:
+            cursor.close()
+            conn.close()
+
+            return jsonify({
+                "error": "Parking introuvable"
+            }), 404
+
+        # Vérifier les places disponibles
+        if parking['places_disponibles'] <= 0:
+            cursor.close()
+            conn.close()
+
+            return jsonify({
+                "error": "Aucune place disponible"
+            }), 400
+
+        # Calcul du prix côté serveur
+        prix_total = float(parking['prix_heure']) * int(duree)
+
+        # Ajouter la réservation
+        cursor.execute("""
+            INSERT INTO reservation
+            (
+                utilisateur_id,
+                parking_id,
+                date_reservation,
+                heure_arrivee,
+                duree,
+                prix_total
+            )
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            utilisateur_id,
+            parking_id,
+            date_reservation,
+            heure_arrivee,
+            duree,
+            prix_total
+        ))
+
+        # Diminuer le nombre de places disponibles
+        cursor.execute("""
+            UPDATE parking
+            SET places_disponibles = places_disponibles - 1
+            WHERE id = %s
+        """, (parking_id,))
+
+        conn.commit()
+
+        reservation_id = cursor.lastrowid
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            "message": "Réservation créée avec succès",
+            "reservation_id": reservation_id,
+            "prix_total": prix_total
+        }), 201
+
+    except Exception as e:
+        print("ERREUR réservation :", e)
+
+        if 'conn' in locals() and conn:
+            conn.rollback()
+            conn.close()
+
+        return jsonify({
+            "error": "Erreur lors de la création de la réservation"
+        }), 500
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True,port=5000)
