@@ -665,9 +665,16 @@ def get_reservation():
    
    reservations=cursor.fetchall()
    
-   cursor.close() 
-   connection.close()
+   
 
+# Convertir l'heure en texte
+   for reservation in reservations:
+            if reservation['heure_arrivee'] is not None:
+                reservation['heure_arrivee'] = str(
+                    reservation['heure_arrivee']
+                )
+   cursor.close() 
+   connection.close()            
    return jsonify (reservations),200
   except Exception as e:
      print ("Erreur get reservations:",e)
