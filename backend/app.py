@@ -48,7 +48,7 @@ def get_users():
    conn=get_db_connection()
    if conn is None:
       return jsonify({
-         "error":"Impossible de se connexter  à la base de données"
+         "error":"Impossible de se connecter  à la base de données"
         }), 500
    cursor=conn.cursor(dictionary=True)
    cursor.execute("SELECT id,nom, email FROM utilisateur ")
@@ -530,6 +530,7 @@ def supprimer_parking(id):
     finally:
         cursor.close()
         connection.close()
+
 ##### Reservation ######
 @app.route('/api/reservations', methods=['POST'])
 def ajouter_reservation():
@@ -644,5 +645,30 @@ def ajouter_reservation():
             "error": "Erreur lors de la création de la réservation"
         }), 500
     
+ #recuperer les reservations  
+@app.route('/api/reservations', methods=['GET']) 
+def get_reservation():
+  
+   connection=get_db_connection()
+   if connection is None:
+     return jsonify (
+        {"error":"impossible de se connecter à la base de données"}),500
+   
+   cursor=connection.cursor(dictionary=True)
+
+   cursor.execute("""SELECT utilisateur_id,
+                   parking_id,
+                   date_reservation,
+                   heure_arrivee,
+                   duree,
+                   prix_total FROM reservation""")
+   
+   reservations=cursor.fetchall()
+   
+   cursor.close() 
+   connection.close()
+
+   return jsonify (reservations),200
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True,port=5000)
