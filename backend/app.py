@@ -648,7 +648,7 @@ def ajouter_reservation():
  #recuperer les reservations  
 @app.route('/api/reservations', methods=['GET']) 
 def get_reservation():
-  
+  try:
    connection=get_db_connection()
    if connection is None:
      return jsonify (
@@ -669,6 +669,11 @@ def get_reservation():
    connection.close()
 
    return jsonify (reservations),200
+  except Exception as e:
+     print ("Erreur get reservations:",e)
+     return jsonify({
+        "error":str(e)
+     }),500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True,port=5000)
