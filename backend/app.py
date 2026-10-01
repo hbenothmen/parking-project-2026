@@ -656,12 +656,22 @@ def get_reservation():
    
    cursor=connection.cursor(dictionary=True)
 
-   cursor.execute("""SELECT utilisateur_id,
-                   parking_id,
-                   date_reservation,
-                   heure_arrivee,
-                   duree,
-                   prix_total FROM reservation""")
+   cursor.execute(""" SELECT
+                r.id,
+                r.utilisateur_id,
+                u.nom AS utilisateur_nom,
+                r.parking_id,
+                p.nom AS parking_nom,
+                r.date_reservation,
+                r.heure_arrivee,
+                r.duree,
+                r.prix_total
+            FROM reservation r
+            JOIN utilisateur u
+                ON r.utilisateur_id = u.id
+            JOIN parking p
+                ON r.parking_id = p.id
+            ORDER BY r.date_reservation DESC""")
    
    reservations=cursor.fetchall()
    
