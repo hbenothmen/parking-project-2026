@@ -691,6 +691,72 @@ def get_reservation():
      return jsonify({
         "error":str(e)
      }),500
+#annulation d'une reservation
+@app.route('/api/reservations/<int:id>', methods=['DELETE'])
+def annuler_reservation(id):
+
+    try:
+        conn = get_db_connection()
+
+        if conn is None:
+            return jsonify({
+                "error": "Erreur de connexion à la base de données"
+            }), 500
+
+        cursor = conn.cursor(dictionary=True)
+
+        # Chercher la réservation
+        cursor.execute("""
+            SELECT id, parking_id
+            FROM reservation
+            WHERE id = %s
+        """, (id,))
+
+        reservation = cursor.fetchone()
+
+        if reservation is None:
+            cursor.close()
+            conn.close()
+
+            return jsonify({
+                "error": "Réservation introuvable"
+            }), 404
+
+        parking_id = reservation['parking_id']
+
+        # Supprimer la réservation
+        cursor.execute("""
+            DELETE FROM reservation
+            WHERE id = %s
+        """, (id,))
+
+        # Remettre une place disponible
+        cursor.execute("""
+            UPDATE parking
+            SET places_disponibles = places_disponibles + 1
+            WHERE id = %s
+        """, (parking_id,))
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            "message": "Réservation annulée avec succès"
+        }), 200
+
+    except Exception as e:
+
+        print("ERREUR ANNULATION :", e)
+
+        if 'conn' in locals() and conn:
+            conn.rollback()
+            conn.close()
+
+        return jsonify({
+            "error": "Erreur lors de l'annulation"
+        }), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True,port=5000)
